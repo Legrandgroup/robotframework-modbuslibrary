@@ -1,28 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import serial
 import modbus_tk
 import modbus_tk.defines as cst
 import modbus_tk.modbus_rtu as modbus_rtu
-import robot
-import operator
+from rfmodbus.common import RfModbusError
+from rfmodbus import __version__
 
-class ModbusError(Exception):
-
-    def __init__(self, msg, detail=None):
-        Exception.__init__(self)
-        self.msg = msg
-        self.detail = detail
-
-    def __str__(self):
-        return u"%s (%s)" % (self.msg, self.detail)
-
-    def __unicode__(self):
-        return u"%s (%s)" % (self.msg, self.detail)
-
-class ModbusRTU:
+class RfModbusRTU:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-    ROBOT_LIBRARY_VERSION = '1.0'
+    ROBOT_LIBRARY_VERSION = __version__
 
     def __init__(self):
         self.master = None
@@ -40,12 +28,12 @@ class ModbusRTU:
     def _process_error(self, except_object, msg="Modbus error"):
         error = self._format_error(except_object=except_object)
         self.logger.error(error)
-        raise ModbusError(msg=msg, detail=error)
+        raise RfModbusError(msg=msg, detail=error)
 
     def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=True):
         try:
             self.serial = serial.Serial(port, baudrate=9600, bytesize=8, parity='E', stopbits=1, xonxoff=0)
-            self.logger.debug(" Opening modbus connection...")
+            self.logger.debug("Opening modbus connection...")
             self.master = modbus_rtu.RtuMaster(self.serial)
             self.master.set_verbose(True)
             self.master.set_timeout(float(timeout))
