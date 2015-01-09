@@ -27,8 +27,8 @@ define HELP
 endef
 export HELP
 
-NAME = $(shell PYTHONPATH=. python -c "import rfmodbuslib; print rfmodbuslib.__name__")
-VERSION = $(shell PYTHONPATH=. python -c "import rfmodbuslib; print rfmodbuslib.__version__")
+NAME = $(shell PYTHONPATH=. python -c "import rfmodbuslib; print rfmodbuslib.__lib_name__")
+VERSION = $(shell PYTHONPATH=. python -c "import rfmodbuslib; print rfmodbuslib.__lib_version__")
 GIT_HASH = $(shell git log -1 --format=%h)
 DOC_DIR = doc
 
@@ -46,7 +46,7 @@ clean-bytecode:
 
 clean-egg:
 	@echo "Cleaning python eggs..."
-	$(SILENCE)rm -rf centralunit.egg-info
+	$(SILENCE)rm -rf *.egg-info
 	$(SILENCE)rm -rf build
 	$(SILENCE)rm -rf dist
 
@@ -55,6 +55,7 @@ clean-egg:
 DOC_ARGS = PYTHONPATH=../..
 
 doc: doc-html
+	@echo "Built $(NAME) doc for version $(VERSION) [$(GIT_HASH)]"
 
 doc-html:
 	@echo "Building keywords documentation (html)..."
