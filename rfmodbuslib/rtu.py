@@ -26,6 +26,11 @@ from rfmodbuslib.common import RfModbusError
 from rfmodbuslib import __lib_version__
 
 class RfModbusRTU(object):
+    """
+        RfModbusRTU class implements a modbus master which can communicate with slaves
+        through a serial line
+    """
+
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = __lib_version__
 
@@ -42,17 +47,28 @@ class RfModbusRTU(object):
             pass
 
     def _format_error(self, except_object):
+        """
+            Return a formatted string from an exception object
+        """
         if hasattr(except_object, 'get_exception_code'):
             return u"Error: %s - code: %d" % (except_object, except_object.get_exception_code())
         else:
             return u"Error: %s " % except_object
 
     def _process_error(self, except_object, msg="Modbus error"):
+        """
+            Process library error
+            1- format the passed message and exception object into a string
+            2- raise a RfModbusError exception
+        """
         error = self._format_error(except_object=except_object)
         self.logger.error(error)
         raise RfModbusError(msg=msg, detail=error)
 
     def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=False):
+        """
+            Open a modbus connection over a serial line
+        """
         try:
             self.logger.debug("Creating serial interface...")
             self.serial = serial.Serial(port, baudrate=9600, bytesize=8, parity='E', stopbits=1, xonxoff=0)
@@ -65,6 +81,9 @@ class RfModbusRTU(object):
             self._process_error(except_object=error, msg="Could not open connection")
 
     def close_connection(self):
+        """
+            Close Existing connection
+        """
         try:
             try:
                 self.logger.info("Closing modbus connection...")
@@ -75,6 +94,13 @@ class RfModbusRTU(object):
             self.logger.debug("Closed modbus connection.")
 
     def read_holding_registers(self, slave, starting_address, quantity_of_x=0):
+        """
+            Read registers
+
+            <slave> is the slave address to read from
+            <starting_address> is the register start address
+            <quantity_of_x> is the number of value to gather
+        """
         try:
             slave = int(slave)
             starting_address = int(starting_address)
@@ -86,8 +112,14 @@ class RfModbusRTU(object):
             self._process_error(except_object=error, msg="Could not read register: %d" % starting_address)
 
     def write_multiple_registers(self, slave, starting_address, datas):
+        """
+            Write registers
+
+            <slave> is the slave address to read from
+            <starting_address> is the register start address
+            <datas> are the datas to be written to <slave>
+        """
         try:
-            self.logger.debug("write multiple register")
             slave = int(slave)
             starting_address = int(starting_address)
             registers = list()
