@@ -15,20 +15,17 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import serial
 import logging
 
 import modbus_tk
 import modbus_tk.defines as cst
-import modbus_tk.modbus_rtu as modbus_rtu
 
 from rfmodbuslib.common import RfModbusError
 from rfmodbuslib import __lib_version__
 
-class RfModbusRTU(object):
+class RfModbusMaster(object):
     """
-        RfModbusRTU class implements a modbus master which can communicate with slaves
-        through a serial line
+        RfModbusMaster class is a base class to implement modbus masters
     """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -38,13 +35,6 @@ class RfModbusRTU(object):
         self.master = None
         self.logger = modbus_tk.utils.create_logger("console")
         self.logger.setLevel(debug_level)
-        self.serial = None
-
-    def __del__(self):
-        try:
-            self.serial.close()
-        except:
-            pass
 
     def _format_error(self, except_object):
         """
@@ -65,33 +55,23 @@ class RfModbusRTU(object):
         self.logger.error(error)
         raise RfModbusError(msg=msg, detail=error)
 
-    def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=False):
+    def open_connection(self, *args, **kwargs):
         """
-            Open a modbus connection over a serial line
+            Raise an exception since this is a base class
         """
-        try:
-            self.logger.debug("Creating serial interface...")
-            self.serial = serial.Serial(port, baudrate=9600, bytesize=8, parity='E', stopbits=1, xonxoff=0)
-            self.logger.debug("Opening modbus connection...")
-            self.master = modbus_rtu.RtuMaster(self.serial)
-            self.master.set_verbose(verbose)
-            self.master.set_timeout(float(timeout))
-            self.logger.info("Opened modbus connection.")
-        except (modbus_tk.modbus.ModbusError, OSError) as error:
-            self._process_error(except_object=error, msg="Could not open connection")
+
+        raise RfModbusError(msg=u"RfModbusMaster is an abstract class that cannot be instanciated")
 
     def close_connection(self):
         """
-            Close Existing connection
+            Close existing modbus connection
         """
         try:
-            try:
-                self.logger.info("Closing modbus connection...")
-                self.serial.close()
-            except:
-                self.logger.debug("Error when closing serial line connection.")
-        finally:
+            self.logger.info("Closing modbus connection...")
+            self.master.close()
             self.logger.debug("Closed modbus connection.")
+        except:
+            self.logger.debug("Error when closing connection.")
 
     def read_holding_registers(self, slave, starting_address, quantity_of_x=0):
         """
@@ -106,7 +86,7 @@ class RfModbusRTU(object):
             starting_address = int(starting_address)
             quantity_of_x = int(quantity_of_x)
             result = self.master.execute(slave=slave, function_code=cst.READ_HOLDING_REGISTERS,
-                                        starting_address=starting_address, quantity_of_x=quantity_of_x)
+                                         starting_address=starting_address, quantity_of_x=quantity_of_x)
             return result
         except modbus_tk.modbus.ModbusError, error:
             self._process_error(except_object=error, msg="Could not read register: %d" % starting_address)
