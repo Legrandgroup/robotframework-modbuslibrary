@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# smartsecurity - centralunit architecture build configuration file.
-#
 # This file is execfile()d with the current directory set to its containing dir.
 #
 # Note that not all possible configuration values are present in this
@@ -18,9 +16,7 @@ import sys, os
 #sys.path.insert(0, os.path.abspath('.'))
 
 source_code_path = os.path.abspath(os.environ['PYTHONPATH'].split(os.pathsep)[0])
-#source_code_path = os.path.join(source_code_path, 'rfmodbuslib')
 sys.path.insert(0, source_code_path)
-print "\n\n\n\n\%s\n\n" % source_code_path
 
 from rfmodbuslib import __lib_name__
 from rfmodbuslib import __lib_version__
@@ -177,7 +173,7 @@ html_show_sphinx = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'smartsecurity-centralunit-arch'
+htmlhelp_basename = 'robotframework-modbuslibrary'
 
 
 # -- Options for LaTeX output --------------------------------------------------
