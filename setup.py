@@ -7,7 +7,7 @@ from __future__ import with_statement
 from setuptools import setup
 from os.path import abspath, dirname, join
 
-from rfmodbuslib import __version__
+from rfmodbuslib import __lib_version__
 
 def read(fname):
     """read and return fname file content"""
@@ -25,7 +25,7 @@ Topic :: Software Development :: Testing
 
 setup(
     name='robotframework-modbuslibrary',
-    version=__version__,
+    version=__lib_version__,
     description='Robot Framework library for Modbus',
     long_description=read('README.rst'),
     author='Legrand Developers (SWAT team)',
@@ -36,5 +36,8 @@ setup(
     platforms='any',
     classifiers=CLASSIFIERS.splitlines(),
     packages=['rfmodbuslib'],
-    install_requires=['robotframework', 'modbus_tk', 'pyserial']
+    install_requires=['robotframework', 'modbus_tk', 'pyserial'],
+    extras_require = {
+        'Sphynx': ["sphynx"],
+    }
 )
