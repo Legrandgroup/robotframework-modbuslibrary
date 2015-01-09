@@ -16,6 +16,7 @@
 #  limitations under the License.
 
 import serial
+import logging
 
 import modbus_tk
 import modbus_tk.defines as cst
@@ -28,9 +29,10 @@ class RfModbusRTU(object):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = __lib_version__
 
-    def __init__(self):
+    def __init__(self, debug_level=logging.NOTSET):
         self.master = None
         self.logger = modbus_tk.utils.create_logger("console")
+        self.logger.setLevel(debug_level)
         self.serial = None
 
     def __del__(self):
@@ -52,6 +54,7 @@ class RfModbusRTU(object):
 
     def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=False):
         try:
+            self.logger.debug("Creating serial interface...")
             self.serial = serial.Serial(port, baudrate=9600, bytesize=8, parity='E', stopbits=1, xonxoff=0)
             self.logger.debug("Opening modbus connection...")
             self.master = modbus_rtu.RtuMaster(self.serial)
