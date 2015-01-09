@@ -2,19 +2,22 @@
 # -*- coding: utf-8 -*-
 
 import serial
+
 import modbus_tk
 import modbus_tk.defines as cst
 import modbus_tk.modbus_rtu as modbus_rtu
-from rfmodbus.common import RfModbusError
-from rfmodbus import __version__
 
-class RfModbusRTU:
+from rfmodbuslib.common import RfModbusError
+from rfmodbuslib import __lib_version__
+
+class RfModbusRTU(object):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-    ROBOT_LIBRARY_VERSION = __version__
+    ROBOT_LIBRARY_VERSION = __lib_version__
 
     def __init__(self):
         self.master = None
         self.logger = modbus_tk.utils.create_logger("console")
+        self.serial = None
 
     def __del__(self):
         try:
@@ -30,12 +33,12 @@ class RfModbusRTU:
         self.logger.error(error)
         raise RfModbusError(msg=msg, detail=error)
 
-    def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=True):
+    def open_connection(self, port='/dev/ttyUSB0', timeout=0.5, verbose=False):
         try:
             self.serial = serial.Serial(port, baudrate=9600, bytesize=8, parity='E', stopbits=1, xonxoff=0)
             self.logger.debug("Opening modbus connection...")
             self.master = modbus_rtu.RtuMaster(self.serial)
-            self.master.set_verbose(True)
+            self.master.set_verbose(verbose)
             self.master.set_timeout(float(timeout))
             self.logger.info("Opened modbus connection.")
         except modbus_tk.modbus.ModbusError, error:
@@ -51,7 +54,6 @@ class RfModbusRTU:
         finally:
             self.logger.debug("Closed modbus connection.")
 
-
     def read_holding_registers(self, slave, starting_address, quantity_of_x=0):
         try:
             slave = int(slave)
@@ -60,7 +62,6 @@ class RfModbusRTU:
             result = self.master.execute(slave=slave, function_code=cst.READ_HOLDING_REGISTERS,
                                         starting_address=starting_address, quantity_of_x=quantity_of_x)
             return result
-
         except modbus_tk.modbus.ModbusError, error:
             self._process_error(except_object=error, msg="Could not read register: %d" % starting_address)
 
@@ -73,7 +74,6 @@ class RfModbusRTU:
             registers = eval(datas)
             self.master.execute(slave=slave, function_code=cst.WRITE_MULTIPLE_REGISTERS,
                                 starting_address=starting_address, output_value=registers)
-
         except modbus_tk.modbus.ModbusError, error:
             self._process_error(except_object=error,
                     msg="Could not write datas (%s) to register (%d)" % (datas, starting_address))
