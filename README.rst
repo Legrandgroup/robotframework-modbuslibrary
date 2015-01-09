@@ -9,7 +9,11 @@ library for testing Modbus.
 
 The library has the following main usages:
 
-- Reading and writing Modbus registers over serial line
+- Reading and writing registers over serial line
+- Reading and writing registers over socket
+
+This is a very basic library which only handles a single connection.
+Multiple connections will be implemented later.
 
 ModbusLibrary is open source software licensed under `Apache License 2.0
 <http://www.apache.org/licenses/LICENSE-2.0.html>`__.
