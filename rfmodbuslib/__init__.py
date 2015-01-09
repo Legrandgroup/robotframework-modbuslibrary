@@ -19,3 +19,5 @@ __append_version__ = '-alpha'
 __lib_version__ = '0.1' + __append_version__
 __lib_name__ = 'rfmodbuslib'
 __lib_copyright__ = 'Copyright 2015 Legrand Group'
+
+__version__ = __lib_version__
