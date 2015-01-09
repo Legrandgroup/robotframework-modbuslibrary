@@ -40,7 +40,10 @@ class RfModbusRTU(object):
             pass
 
     def _format_error(self, except_object):
-        return u"Error: %s - code: %d" % (except_object, except_object.get_exception_code())
+        if hasattr(except_object, 'get_exception_code'):
+            return u"Error: %s - code: %d" % (except_object, except_object.get_exception_code())
+        else:
+            return u"Error: %s " % except_object
 
     def _process_error(self, except_object, msg="Modbus error"):
         error = self._format_error(except_object=except_object)
@@ -55,7 +58,7 @@ class RfModbusRTU(object):
             self.master.set_verbose(verbose)
             self.master.set_timeout(float(timeout))
             self.logger.info("Opened modbus connection.")
-        except modbus_tk.modbus.ModbusError, error:
+        except (modbus_tk.modbus.ModbusError, OSError) as error:
             self._process_error(except_object=error, msg="Could not open connection")
 
     def close_connection(self):
