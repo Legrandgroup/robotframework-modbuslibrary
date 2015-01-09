@@ -22,7 +22,7 @@ define HELP
   install          install lib and dependencies
 
   --- documentation commands
-  doc              build keywords documentationence (pdf)
+  doc              build keywords documentation
 
 endef
 export HELP
@@ -50,6 +50,9 @@ clean-egg:
 	$(SILENCE)rm -rf build
 	$(SILENCE)rm -rf dist
 
+install:
+	@echo "Installing package..."
+	python setup.py install
 
 # PYTHONPATH has to be set for doc subdir for users who do not have it set
 DOC_ARGS = PYTHONPATH=../..
