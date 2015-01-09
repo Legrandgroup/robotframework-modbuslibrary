@@ -4,7 +4,7 @@
 """Setup script for Modbus Robotframework library"""
 
 from __future__ import with_statement
-from distutils.core import setup
+from setuptools import setup
 from os.path import abspath, dirname, join
 
 from rfmodbuslib import __version__
@@ -17,7 +17,7 @@ def read(fname):
 
 CLASSIFIERS = """
 Development Status :: 3 - Alpha
-License :: OSI Approved :: GPLv2
+License :: OSI Approved :: Apache Software License
 Operating System :: OS Independent
 Programming Language :: Python
 Topic :: Software Development :: Testing
@@ -31,10 +31,10 @@ setup(
     author='Legrand Developers (SWAT team)',
     author_email='pierre.roth@legrand.fr',
     url='https://github.com/Legrandgroup/robotframework-modbuslibrary',
-    license='GPLv2',
+    license='Apache License 2.0',
     keywords='robotframework testing testautomation modbus',
     platforms='any',
     classifiers=CLASSIFIERS.splitlines(),
     packages=['rfmodbuslib'],
-    install_requires=['robotframework', 'modbus_tk', 'serial']
+    install_requires=['robotframework', 'modbus_tk', 'pyserial']
 )
