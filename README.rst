@@ -11,7 +11,7 @@ The library has the following main usages:
 
 - Reading and writing Modbus registers over serial line
 
-SSHLibrary is open source software licensed under `Apache License 2.0
+ModbusLibrary is open source software licensed under `Apache License 2.0
 <http://www.apache.org/licenses/LICENSE-2.0.html>`__.
 
 Installation
@@ -31,7 +31,7 @@ it, and install it::
 Documentation
 -------------
 
-Keyword documentation by version can be built running::
+Keyword documentation can be built running::
 
     make doc
 
